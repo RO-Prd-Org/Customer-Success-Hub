@@ -217,7 +217,7 @@ export function Stat({
   value: ReactNode;
   label: ReactNode;
   tone?: StatTone;
-  size?: "default" | "lg";
+  size?: "default" | "md" | "lg";
 }) {
   const boxFill =
     tone === "danger"
@@ -232,6 +232,7 @@ export function Stat({
         ? "#C0853233"
         : t.strokeTertiary;
   const large = size === "lg";
+  const medium = size === "md";
 
   return (
     <div
@@ -242,13 +243,18 @@ export function Stat({
         background: boxFill,
         border: `1px solid ${boxStroke}`,
         borderRadius: large ? 10 : 8,
-        padding: large ? "22px 24px" : "12px 14px",
+        padding: large ? "22px 24px" : medium ? "16px 18px" : "12px 14px",
+        display: medium ? "flex" : undefined,
+        flexDirection: medium ? "column" : undefined,
+        justifyContent: medium ? "center" : undefined,
+        alignItems: medium ? "center" : undefined,
+        textAlign: medium ? "center" : undefined,
       }}
     >
       <div
         style={{
-          fontSize: large ? 36 : 24,
-          lineHeight: large ? "40px" : "30px",
+          fontSize: large ? 36 : medium ? 28 : 24,
+          lineHeight: large ? "40px" : medium ? "34px" : "30px",
           fontWeight: 590,
           color: toneColor(tone),
         }}
@@ -257,9 +263,9 @@ export function Stat({
       </div>
       <div
         style={{
-          marginTop: large ? 8 : 4,
-          fontSize: large ? 14 : 12,
-          lineHeight: large ? "20px" : "16px",
+          marginTop: large ? 8 : medium ? 6 : 4,
+          fontSize: large ? 14 : medium ? 13 : 12,
+          lineHeight: large ? "20px" : medium ? "18px" : "16px",
           fontWeight: 700,
           color: t.textTertiary,
         }}
@@ -615,6 +621,177 @@ export function HealthResultTable() {
           })}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+const pipelineByMonth = [
+  { month: "Mar 26", rolling: 1 },
+  { month: "Apr 26", rolling: 60001 },
+  { month: "May 26", rolling: 60001 },
+  { month: "Jun 26", rolling: 60001 },
+  { month: "Jul 26", rolling: 60001 },
+  { month: "Aug 26", rolling: 145001 },
+  { month: "Sep 26", rolling: 339001 },
+  { month: "Oct 26", rolling: 552601 },
+  { month: "Nov 26", rolling: 1157601 },
+  { month: "Dec 26", rolling: 1627617 },
+  { month: "Jan 27", rolling: 1737617 },
+  { month: "Feb 27", rolling: 1861817 },
+  { month: "Mar 27", rolling: 2291817 },
+  { month: "May 27", rolling: 2436817 },
+  { month: "Jun 27", rolling: 2521817 },
+] as const;
+
+function formatArrAxis(value: number) {
+  if (value === 0) return "$0";
+  const millions = value / 1_000_000;
+  return `$${millions.toFixed(1)}M`;
+}
+
+export function PipelineTrendChart() {
+  const width = 920;
+  const height = 320;
+  const left = 56;
+  const right = 16;
+  const top = 16;
+  const bottom = 52;
+  const plotW = width - left - right;
+  const plotH = height - top - bottom;
+  const yMax = 2_600_000;
+  const yTicks = [0, 650000, 1300000, 1950000, 2600000];
+  const series = [
+    { key: "rolling" as const, name: "Rolling Pipeline", color: t.accent },
+  ];
+  const x = (i: number) => left + (plotW / (pipelineByMonth.length - 1)) * i;
+  const y = (v: number) => top + plotH - (v / yMax) * plotH;
+
+  return (
+    <div
+      style={{
+        border: `1px solid ${t.strokeTertiary}`,
+        borderRadius: 8,
+        padding: "12px 14px 8px",
+        background: t.bg,
+      }}
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        height="auto"
+        role="img"
+        aria-label="Rolling pipeline by close month"
+      >
+        {yTicks.map((tick) => (
+          <g key={tick}>
+            <line
+              x1={left}
+              x2={width - right}
+              y1={y(tick)}
+              y2={y(tick)}
+              stroke={t.strokeTertiary}
+            />
+            <text
+              x={left - 8}
+              y={y(tick) + 4}
+              textAnchor="end"
+              fontSize="11"
+              fill={t.textTertiary}
+            >
+              {formatArrAxis(tick)}
+            </text>
+          </g>
+        ))}
+        <line
+          x1={left}
+          x2={width - right}
+          y1={top + plotH}
+          y2={top + plotH}
+          stroke={t.strokeSecondary}
+        />
+        <text
+          x={left + plotW / 2}
+          y={height - 4}
+          textAnchor="middle"
+          fontSize="11"
+          fill={t.textTertiary}
+        >
+          Close month
+        </text>
+        <text
+          x={14}
+          y={top + plotH / 2}
+          textAnchor="middle"
+          fontSize="11"
+          fill={t.textTertiary}
+          transform={`rotate(-90 14 ${top + plotH / 2})`}
+        >
+          ARR ($)
+        </text>
+        {series.map((s) => {
+          const points = pipelineByMonth
+            .map((row, i) => `${x(i)},${y(row[s.key])}`)
+            .join(" ");
+          return (
+            <g key={s.key}>
+              <polyline
+                points={points}
+                fill="none"
+                stroke={s.color}
+                strokeWidth="2"
+              />
+              {pipelineByMonth.map((row, i) => (
+                <circle
+                  key={`${s.key}-${row.month}`}
+                  cx={x(i)}
+                  cy={y(row[s.key])}
+                  r="3"
+                  fill={s.color}
+                />
+              ))}
+            </g>
+          );
+        })}
+        {pipelineByMonth.map((row, i) => (
+          <text
+            key={row.month}
+            x={x(i)}
+            y={top + plotH + 16}
+            textAnchor="end"
+            fontSize="10"
+            fill={t.textTertiary}
+            transform={`rotate(-40 ${x(i)} ${top + plotH + 16})`}
+          >
+            {row.month}
+          </text>
+        ))}
+      </svg>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 20,
+          marginTop: 4,
+          fontSize: 12,
+          lineHeight: "16px",
+          fontWeight: 700,
+          color: t.textTertiary,
+        }}
+      >
+        {series.map((s) => (
+          <span key={s.key} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <span
+              style={{
+                width: 14,
+                height: 2,
+                background: s.color,
+                display: "inline-block",
+              }}
+            />
+            {s.name}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

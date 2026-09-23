@@ -12,6 +12,7 @@ import {
   WeekChange,
   ChangeText,
   HealthResultTable,
+  PipelineTrendChart,
   canvasPageStyle,
 } from "@/components/canvas-ui";
 
@@ -55,19 +56,29 @@ export default function Home() {
           />
         </Grid>
 
-        <Grid columns={4} gap={12}>
-          <Stat value="11" label="New demos" />
-          <Stat value="9" label="New opportunities" />
-          <Stat
-            value="48"
-            label={
-              <>
-                Total 4RQ opportunities ·{" "}
-                <ChangeText direction="up">up from 43</ChangeText>
-              </>
-            }
-          />
-          <Stat value="14" label="Implementations for 2026" />
+        <Grid columns="minmax(0, 1fr) minmax(0, 1.6fr)" gap={16}>
+          <Grid columns={2} gap={12}>
+            <Stat value="11" label="New demos" size="md" />
+            <Stat value="9" label="New opportunities" size="md" />
+            <Stat
+              value="48"
+              size="md"
+              label={
+                <>
+                  Total 4RQ opportunities ·{" "}
+                  <ChangeText direction="up">up from 43</ChangeText>
+                </>
+              }
+            />
+            <Stat value="14" label="Implementations for 2026" size="md" />
+          </Grid>
+          <Stack gap={10}>
+            <H2>Rolling pipeline by close month</H2>
+            <Text tone="tertiary" size="small">
+              Source: Pipeline Analysis · Pipeline Chart
+            </Text>
+            <PipelineTrendChart />
+          </Stack>
         </Grid>
 
         <Divider />
