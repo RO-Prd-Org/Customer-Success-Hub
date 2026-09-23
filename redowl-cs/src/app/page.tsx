@@ -1,0 +1,279 @@
+import {
+  BatteryPill,
+  Callout,
+  Divider,
+  Grid,
+  H1,
+  H2,
+  Stack,
+  Stat,
+  Table,
+  Text,
+  WeekChange,
+  ChangeText,
+  HealthResultTable,
+  canvasPageStyle,
+} from "@/components/canvas-ui";
+
+export default function Home() {
+  return (
+    <div style={canvasPageStyle}>
+      <Stack gap={28}>
+        <H1>Executive Dashboard — Business Performance — 28 August 2026</H1>
+
+        <Callout title="Board snapshot">
+          YTD ARR is $60,001. Gross pipeline is $2,562,700,{" "}
+          <WeekChange direction="up" percent="4.2%" />, while weighted pipeline
+          is $874,420 and the identified path to $1M is $1,051,500. The active
+          opportunity base is 48,{" "}
+          <ChangeText direction="up">up 12% from 43</ChangeText>, with 0
+          opportunities created in August — 0 ICP and 0 Non-ICP. Commercial
+          activity recorded 11 demos and 9 opportunities, casuals contributed
+          0.00 hours, and 14 implementations are active.
+        </Callout>
+
+        <Grid columns={3} gap={16}>
+          <Stat value="$60,001" label="YTD ARR" tone="warning" size="lg" />
+          <Stat
+            value="$2,562,700"
+            size="lg"
+            label={
+              <>
+                Gross pipeline · <WeekChange direction="up" percent="4.2%" />
+              </>
+            }
+          />
+          <Stat
+            value="$874,420"
+            size="lg"
+            label={
+              <>
+                Weighted pipeline ·{" "}
+                <WeekChange direction="up" percent="14.6%" />
+              </>
+            }
+          />
+        </Grid>
+
+        <Grid columns={4} gap={12}>
+          <Stat value="11" label="New demos" />
+          <Stat value="9" label="New opportunities" />
+          <Stat
+            value="48"
+            label={
+              <>
+                Total 4RQ opportunities ·{" "}
+                <ChangeText direction="up">up from 43</ChangeText>
+              </>
+            }
+          />
+          <Stat value="14" label="Implementations for 2026" />
+        </Grid>
+
+        <Divider />
+
+        <Stack gap={10}>
+          <H2>Build progress by customer</H2>
+          <Text tone="tertiary" size="small">
+            Live as at 17 Sep 2026 | Source: Implementation Tracker
+          </Text>
+          <Grid columns={6} gap={12}>
+            <Stat value="15" label="In implementation" />
+            <Stat value="1" label="Sandbox live" />
+            <Stat value="48%" label="Avg build progress" />
+            <Stat value="4" label="With customer" />
+            <Stat value="14" label="At risk" tone="danger" />
+            <Stat value="$1,390,000" label="ARR in implementation" />
+          </Grid>
+          <Table
+            stickyHeader
+            headers={[
+              "Customer",
+              "% Complete",
+              "Stage No.",
+              "Sandbox Development Stage",
+              "Days in Stage",
+              "RAG",
+              "ARR ($)",
+            ]}
+            columnAlign={[
+              "left",
+              "left",
+              "right",
+              "left",
+              "right",
+              "left",
+              "right",
+            ]}
+            rowTone={[
+              "success",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+              "danger",
+            ]}
+            rows={[
+              [
+                "Aussie Broadband",
+                <BatteryPill key="abb" percent={100} />,
+                "10",
+                "Sandbox Live",
+                "50",
+                "Complete",
+                "350000",
+              ],
+              [
+                "Vicinity Centres",
+                <BatteryPill key="vic" percent={90} />,
+                "9",
+                "Released to Customer with Changes",
+                "37",
+                "Red",
+                "25000",
+              ],
+              [
+                "Police Credit Union SA & NT",
+                <BatteryPill key="pcu" percent={70} />,
+                "7",
+                "Released to Customer for Testing",
+                "45",
+                "Red",
+                "25000",
+              ],
+              [
+                "Nutrimetics",
+                <BatteryPill key="nut" percent={60} />,
+                "6",
+                "Corrections from Testing",
+                "34",
+                "Red",
+                "25000",
+              ],
+              [
+                "YourCFOPartner",
+                <BatteryPill key="cfo" percent={30} />,
+                "3",
+                "Configuration to Customer SoW",
+                "30",
+                "Red",
+                "10000",
+              ],
+              [
+                "Northern Health",
+                <BatteryPill key="nh" percent={40} />,
+                "4",
+                "Access - provide customer demo logins",
+                "42",
+                "Red",
+                "300000",
+              ],
+              [
+                "Treasury Wine Estates",
+                <BatteryPill key="twe" percent={30} />,
+                "3",
+                "Configuration to Customer SoW",
+                "36",
+                "Red",
+                "280000",
+              ],
+              [
+                "QBE Insurance",
+                <BatteryPill key="qbe" percent={20} />,
+                "2",
+                "Configuration to base level (Simple PO flow)",
+                "31",
+                "Red",
+                "60000",
+              ],
+              [
+                "CoolDrive Auto Parts",
+                <BatteryPill key="cd" percent={50} />,
+                "5",
+                "Internal Testing",
+                "53",
+                "Red",
+                "60000",
+              ],
+              [
+                "ENGIE AU",
+                <BatteryPill key="engie" percent={10} />,
+                "1",
+                "Engineering — environment yet to be allocated",
+                "44",
+                "Red",
+                "50000",
+              ],
+              [
+                "Regis Aged Care",
+                <BatteryPill key="regis" percent={10} />,
+                "1",
+                "Engineering — environment yet to be allocated",
+                "69",
+                "Red",
+                "50000",
+              ],
+              [
+                "SALTA",
+                <BatteryPill key="salta" percent={40} />,
+                "4",
+                "Access - provide customer demo logins",
+                "33",
+                "Red",
+                "50000",
+              ],
+              [
+                "TOGA",
+                <BatteryPill key="toga" percent={20} />,
+                "2",
+                "Configuration to base level (Simple PO flow)",
+                "39",
+                "Red",
+                "50000",
+              ],
+              [
+                "Kane Construction",
+                <BatteryPill key="kane" percent={80} />,
+                "8",
+                "Customer Config Changes Being Made",
+                "29",
+                "Red",
+                "30000",
+              ],
+              [
+                "ISS Data",
+                <BatteryPill key="iss" percent={70} />,
+                "7",
+                "Released to Customer for Testing",
+                "49",
+                "Red",
+                "25000",
+              ],
+            ]}
+          />
+          <Text tone="tertiary" size="small">
+            Kane Dropped out.
+          </Text>
+          <Text tone="tertiary" size="small">
+            Source: RedOwl Pipeline Analysis · Implementation Dashboard · Live as
+            at 17 Sep 2026
+          </Text>
+        </Stack>
+
+        <Stack gap={10}>
+          <H2>Customer health</H2>
+          <HealthResultTable />
+        </Stack>
+      </Stack>
+    </div>
+  );
+}
