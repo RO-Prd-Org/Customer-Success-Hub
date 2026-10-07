@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   BatteryPill,
   Callout,
@@ -11,15 +14,67 @@ import {
   Text,
   WeekChange,
   ChangeText,
-  HealthResultTable,
   PipelineTrendChart,
   canvasPageStyle,
+  canvasTokens,
 } from "@/components/canvas-ui";
+import { CustomerHealthBlock, HealthEditor } from "@/components/health-editor";
+import { HealthProvider } from "@/components/health-store";
 
 export default function Home() {
   return (
+    <HealthProvider>
+      <DashboardShell />
+    </HealthProvider>
+  );
+}
+
+function DashboardShell() {
+  const [tab, setTab] = useState<"dashboard" | "health">("dashboard");
+  const t = canvasTokens;
+
+  return (
     <div style={canvasPageStyle}>
       <Stack gap={28}>
+        <div style={{ display: "flex", gap: 8 }}>
+          {(
+            [
+              ["dashboard", "Dashboard"],
+              ["health", "Customer health"],
+            ] as const
+          ).map(([id, label]) => {
+            const active = tab === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setTab(id)}
+                style={{
+                  border: `1px solid ${active ? t.accent : t.strokeSecondary}`,
+                  background: active ? t.accent : t.bg,
+                  color: active ? "#fff" : t.text,
+                  borderRadius: 999,
+                  padding: "6px 14px",
+                  font: "inherit",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        {tab === "health" ? <HealthEditor /> : <DashboardView />}
+      </Stack>
+    </div>
+  );
+}
+
+function DashboardView() {
+  return (
+    <Stack gap={28}>
         <H1>Executive Dashboard — Business Performance — 28 August 2026</H1>
 
         <Callout title="Board snapshot">
@@ -280,11 +335,7 @@ export default function Home() {
           </Text>
         </Stack>
 
-        <Stack gap={10}>
-          <H2>Customer health</H2>
-          <HealthResultTable />
-        </Stack>
+        <CustomerHealthBlock />
       </Stack>
-    </div>
   );
 }

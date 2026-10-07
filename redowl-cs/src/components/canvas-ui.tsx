@@ -528,23 +528,15 @@ export function BatteryPill({ percent }: { percent: number }) {
   );
 }
 
-type HealthBand = "Healthy" | "Watch" | "At Risk";
+export type HealthBand = "Healthy" | "Watch" | "At Risk";
 
-const healthRows: Array<{
+export type HealthResultRow = {
   name: string;
   tier: string;
   risk: string;
   health: string;
   band: HealthBand;
-}> = [
-  { name: "Acme Industries", tier: "Enterprise", risk: "9.5", health: "60%", band: "Watch" },
-  { name: "Electra Design", tier: "SMB", risk: "2", health: "92%", band: "Healthy" },
-  { name: "Aussie Broadband", tier: "Enterprise", risk: "7", health: "71%", band: "Watch" },
-  { name: "Vicinity", tier: "Enterprise", risk: "5.5", health: "77%", band: "Healthy" },
-  { name: "David Jones", tier: "Enterprise", risk: "5", health: "79%", band: "Healthy" },
-  { name: "Timothy Culin", tier: "SMB", risk: "7", health: "71%", band: "Watch" },
-  { name: "Sth Australia Police Credit Union", tier: "SMB", risk: "13", health: "46%", band: "At Risk" },
-];
+};
 
 const bandFill: Record<HealthBand, { row: string; cell: string; text: string }> = {
   Healthy: { row: "transparent", cell: "#E8F5E9", text: t.success },
@@ -552,7 +544,7 @@ const bandFill: Record<HealthBand, { row: string; cell: string; text: string }> 
   "At Risk": { row: "transparent", cell: "#FFCDD2", text: t.danger },
 };
 
-export function HealthResultTable() {
+export function HealthResultTable({ rows }: { rows: HealthResultRow[] }) {
   const th: CSSProperties = {
     padding: "8px 12px",
     fontSize: 12,
@@ -583,7 +575,7 @@ export function HealthResultTable() {
           </tr>
         </thead>
         <tbody>
-          {healthRows.map((row) => {
+          {rows.map((row) => {
             const fill = bandFill[row.band];
             return (
               <tr key={row.name} style={{ background: fill.row }}>
@@ -795,6 +787,8 @@ export function PipelineTrendChart() {
     </div>
   );
 }
+
+export const canvasTokens = t;
 
 export const canvasPageStyle: CSSProperties = {
   minHeight: "100%",
