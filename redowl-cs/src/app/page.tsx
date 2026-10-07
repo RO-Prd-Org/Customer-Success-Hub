@@ -13,7 +13,6 @@ import {
   Table,
   Text,
   WeekChange,
-  ChangeText,
   PipelineTrendChart,
   canvasPageStyle,
   canvasTokens,
@@ -75,30 +74,18 @@ function DashboardShell() {
 function DashboardView() {
   return (
     <Stack gap={28}>
-        <H1>Executive Dashboard — Business Performance — 28 August 2026</H1>
+        <H1>Executive Dashboard — Business Performance — 7 October 2026</H1>
 
         <Callout title="Board snapshot">
-          YTD ARR is $60,001. Gross pipeline is $2,562,700,{" "}
-          <WeekChange direction="up" percent="4.2%" />, while weighted pipeline
-          is $874,420 and the identified path to $1M is $1,051,500. The active
-          opportunity base is 48,{" "}
-          <ChangeText direction="up">up 12% from 43</ChangeText>, with 0
-          opportunities created in August — 0 ICP and 0 Non-ICP. Commercial
-          activity recorded 11 demos and 9 opportunities, casuals contributed
-          0.00 hours, and 14 implementations are active.
+          YTD ARR is $109,001, from deals in Closed. Gross pipeline is
+          $4,608,008. The active opportunity base is 86, counting every deal
+          that is not Closed. Six deals are in Demo/POV. 14 implementations are
+          active.
         </Callout>
 
         <Grid columns={3} gap={16}>
-          <Stat value="$60,001" label="YTD ARR" tone="warning" size="lg" />
-          <Stat
-            value="$2,562,700"
-            size="lg"
-            label={
-              <>
-                Gross pipeline · <WeekChange direction="up" percent="4.2%" />
-              </>
-            }
-          />
+          <Stat value="$109,001" label="YTD ARR" tone="warning" size="lg" />
+          <Stat value="$4,608,008" size="lg" label="Gross pipeline" />
           <Stat
             value="$874,420"
             size="lg"
@@ -113,24 +100,15 @@ function DashboardView() {
 
         <Grid columns="minmax(0, 1fr) minmax(0, 1.6fr)" gap={16}>
           <Grid columns={2} gap={12}>
-            <Stat value="11" label="New demos" size="md" />
+            <Stat value="6" label="New demos" size="md" />
             <Stat value="9" label="New opportunities" size="md" />
-            <Stat
-              value="48"
-              size="md"
-              label={
-                <>
-                  Total 4RQ opportunities ·{" "}
-                  <ChangeText direction="up">up from 43</ChangeText>
-                </>
-              }
-            />
+            <Stat value="86" size="md" label="Total 4RQ opportunities" />
             <Stat value="14" label="Implementations for 2026" size="md" />
           </Grid>
           <Stack gap={10}>
             <H2>Rolling pipeline by close month</H2>
             <Text tone="tertiary" size="small">
-              Source: Pipeline Analysis · Pipeline Chart
+              Source: Pipedrive deal export · expected close date
             </Text>
             <PipelineTrendChart />
           </Stack>
