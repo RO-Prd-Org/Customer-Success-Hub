@@ -1,0 +1,25 @@
+{
+  "name": "@redowl/talon-ui-kit",
+  "version": "1.0.0",
+  "description": "Declarative RedOwl Talon UI kit spec, audit tooling, and agent skill",
+  "type": "module",
+  "bin": {
+    "talon-ui-audit": "./scripts/audit-ui.mjs"
+  },
+  "files": [
+    "talon-ui-kit.yaml",
+    "scripts/audit-ui.mjs",
+    "skill/",
+    "README.md"
+  ],
+  "scripts": {
+    "audit": "node scripts/audit-ui.mjs --root ..",
+    "audit:json": "node scripts/audit-ui.mjs --root .. --format json"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

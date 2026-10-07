@@ -1,0 +1,62 @@
+[
+  {
+    "id": "TKT-1001",
+    "customer": "EXAMPLE CUSTOMER A",
+    "loggedTier": "NOT ON MATRIX",
+    "severity": "P1",
+    "loggedDate": "06-Jul-26",
+    "actualResponse": 0.2,
+    "actualResolution": 3.5,
+    "notes": "Payment file halted; mitigated same morning"
+  },
+  {
+    "id": "TKT-1002",
+    "customer": "EXAMPLE CUSTOMER A",
+    "loggedTier": "NOT ON MATRIX",
+    "severity": "P2",
+    "loggedDate": "21-Jul-26",
+    "actualResponse": 0.75,
+    "actualResolution": 6,
+    "notes": "Response missed - 45 min against a 30 min target"
+  },
+  {
+    "id": "TKT-1003",
+    "customer": "EXAMPLE CUSTOMER A",
+    "loggedTier": "NOT ON MATRIX",
+    "severity": "P3",
+    "loggedDate": "03-Aug-26",
+    "actualResponse": 2.5,
+    "actualResolution": 21,
+    "notes": "Workaround ran past the 16 h target"
+  },
+  {
+    "id": "TKT-1004",
+    "customer": "EXAMPLE CUSTOMER B",
+    "loggedTier": "NOT ON MATRIX",
+    "severity": "P2",
+    "loggedDate": "14-Jul-26",
+    "actualResponse": 0.4,
+    "actualResolution": 7,
+    "notes": "Within target both ways"
+  },
+  {
+    "id": "TKT-1005",
+    "customer": "EXAMPLE CUSTOMER B",
+    "loggedTier": "NOT ON MATRIX",
+    "severity": "P4",
+    "loggedDate": "10-Aug-26",
+    "actualResponse": 12,
+    "actualResolution": 200,
+    "notes": "Cosmetic; comfortably inside target"
+  },
+  {
+    "id": "TKT-1006",
+    "customer": "EXAMPLE CUSTOMER B",
+    "loggedTier": "NOT ON MATRIX",
+    "severity": "P5",
+    "loggedDate": "17-Aug-26",
+    "actualResponse": 60,
+    "actualResolution": 95,
+    "notes": "Outcome review - response past 40 h target"
+  }
+]

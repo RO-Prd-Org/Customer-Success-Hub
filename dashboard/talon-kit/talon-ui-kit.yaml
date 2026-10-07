@@ -1,0 +1,348 @@
+# Talon UI Kit — declarative source of truth
+# Version this file when design rules or structure change.
+# Consumed by: audit-ui.mjs, Cursor skill (talon-ui-kit), agent scaffolding.
+
+kit:
+  name: talon-ui-kit
+  version: "1.0.0"
+  description: RedOwl design system — React + Tailwind v4 + shadcn base-nova
+  stack:
+    framework: react
+    bundler: vite
+    styling: tailwindcss-v4
+    primitives: "@base-ui/react"
+    component_base: shadcn
+    icons: lucide-react
+    charts: recharts
+    tables: "@tanstack/react-table"
+    ai_streaming: "@ai-sdk/react"
+  reference_implementation: talon/src
+
+# ---------------------------------------------------------------------------
+# Design tokens — map to CSS custom properties in index.css
+# Never hardcode these values in components; use semantic Tailwind classes.
+# ---------------------------------------------------------------------------
+design_tokens:
+  fonts:
+    sans: Inter Variable
+    heading: IBM Plex Sans Variable
+    tailwind:
+      body: font-sans
+      headings: font-heading
+
+  colors:
+    brand:
+      css_var: "--brand"
+      hex: "#ff0000"
+      tailwind: bg-brand | text-brand | border-brand
+      usage: Primary CTAs, sidebar nav icons, progress fill, chart attention highlights
+    brand_foreground:
+      css_var: "--brand-foreground"
+      hex: "#ffffff"
+      tailwind: text-brand-foreground
+      usage: Text/icons on brand backgrounds
+    brand_dark:
+      css_var: mapped via --foreground, --primary, --chart-5
+      hex: "#232b22"
+      usage: Light-mode dark text and surfaces; dark-mode elevated surfaces (card, sidebar, popover)
+      never_in_light_mode: []
+    darkest_dark:
+      css_var: "--background"
+      hex: "#161c16"
+      usage: Dark-mode page background only
+      never_in_light_mode: true
+
+  semantic_palette:
+    light:
+      background: oklch white
+      foreground: "#232b22"
+      primary: "#232b22"
+      muted: oklch neutral green-gray
+      chart_scale: chart-1 (lightest) → chart-5 (brand_dark)
+    dark:
+      background: "#161c16"
+      foreground: oklch near-white
+      card_popover_sidebar: "#232b22"
+      primary: light gray on dark
+      primary_foreground: "#232b22"
+
+  radius:
+    base: 0
+    note: Sharp corners — do not override with rounded-xl on layout shells unless spec says so
+
+# ---------------------------------------------------------------------------
+# Layout patterns — compositional structure
+# ---------------------------------------------------------------------------
+layouts:
+  master_pattern:
+    id: master-layout
+    description: Three-column shell — sidebar · app · chatbot
+    import: "@/components/patterns/master-layout"
+    slots:
+      - id: sidebar
+        component: MasterLayout.Sidebar
+        width_default: 16rem
+        collapsible: true
+      - id: main
+        component: MasterLayout.Main
+        expands: true
+      - id: chatbot
+        component: MasterLayout.Chatbot
+        width_default: 20rem
+        collapsible: true
+        toggle_variant: logo
+    provider: MasterLayoutProvider
+    children_pattern: |
+      <MasterLayout>
+        <MasterLayout.Sidebar>{sidebarContent}</MasterLayout.Sidebar>
+        <MasterLayout.Main>{pageContent}</MasterLayout.Main>
+        <MasterLayout.Chatbot>{chatPanel}</MasterLayout.Chatbot>
+      </MasterLayout>
+
+  page_shell:
+    import: "@/components/patterns/page-shell"
+    components:
+      - PageTopBar
+    breadcrumbs: required for drill-down pages
+
+  drill_down:
+    import: "@/components/patterns/drill-down"
+    components:
+      - DrillDrawer
+      - DrillPage
+
+# ---------------------------------------------------------------------------
+# Component registry
+# ---------------------------------------------------------------------------
+components:
+  ui:
+    path: talon/src/components/ui
+    import_prefix: "@/components/ui"
+    primitives:
+      - name: Button
+        file: button.tsx
+        variants:
+          default: bg-brand text-brand-foreground
+          outline: border-border bg-background
+          secondary: bg-secondary
+          ghost: hover:bg-muted
+          destructive: bg-destructive/10 text-destructive
+          link: text-primary underline
+        sizes:
+          default: h-9 px-3.5
+          sm: h-7 px-3
+          lg: h-10 px-4
+          xs: h-6 px-2.5
+        rules:
+          - Primary actions use variant default (brand), not bg-primary
+          - Prefer size default for page-level actions; sm/xs for dense toolbars only
+          - Never use raw hex or Tailwind color names on buttons
+
+      - name: Progress
+        file: progress.tsx
+        indicator: bg-brand
+        rules:
+          - Progress fill always uses brand red via ProgressIndicator default
+
+      - name: Card
+        file: card.tsx
+        parts: [CardHeader, CardTitle, CardDescription, CardContent, CardFooter]
+
+      - name: Sidebar
+        file: sidebar.tsx
+        rules:
+          - First SVG in menu buttons uses text-brand via [&>svg:first-child]:text-brand
+
+      - name: Chart
+        file: chart.tsx
+        wrapper: ChartContainer
+        rules:
+          - Series colors use var(--chart-1) through var(--chart-5)
+          - Brand red only for datapoints needing attention
+
+      - name: Badge
+        file: badge.tsx
+      - name: Alert
+        file: alert.tsx
+      - name: Dialog
+        file: dialog.tsx
+        overlay: bg-foreground/10 dark:bg-background/60
+      - name: AlertDialog
+        file: alert-dialog.tsx
+        overlay: bg-foreground/10 dark:bg-background/60
+      - name: Sheet
+        file: sheet.tsx
+        overlay: bg-foreground/10 dark:bg-background/60
+      - name: Drawer
+        file: drawer.tsx
+        overlay: bg-foreground/10 dark:bg-background/60
+      - name: TalonDataTable
+        note: Lives in patterns, not ui
+
+  patterns:
+    path: talon/src/components/patterns
+    import_prefix: "@/components/patterns"
+    modules:
+      - id: master-layout
+        exports: [MasterLayout, MasterLayoutSidebar, MasterLayoutMain, MasterLayoutChatbot]
+      - id: sidebar
+        exports: [SidebarBrand, SidebarAppSwitcher, SidebarNavTabs, SidebarUserMenu]
+        rules:
+          - SidebarBrand uses RedOwl logo assets from public/
+          - App switcher icon chip uses brand color
+      - id: data-table
+        exports: [TalonDataTable]
+        row_variants: [clickable, action]
+      - id: page-shell
+        exports: [PageTopBar]
+      - id: drill-down
+        exports: [DrillDrawer, DrillPage]
+      - id: ai-chat
+        exports: [AiChatPanel, AiChatComposer, AiChatConversation, AiChatToolCall, AiChatApproval]
+        rules:
+          - Approval blocks use border-border bg-muted — never amber/yellow warning tints
+          - Tool cards use semantic tokens only
+
+# ---------------------------------------------------------------------------
+# Semantic rules — enforced by audit + skill
+# ---------------------------------------------------------------------------
+semantic_rules:
+  colors:
+    - id: no-absolute-black
+      rule: "Do not use #000, #000000, bg-black, text-black, or oklch(0 0 0) in components"
+      use_instead: foreground, primary, brand_dark tokens
+
+    - id: no-off-brand-hues
+      rule: Do not use Tailwind named hues (amber, yellow, orange, lime, sky, etc.) for UI surfaces
+      exceptions:
+        - destructive semantic (red destructive token)
+        - "brand (#ff0000 via bg-brand)"
+
+    - id: darkest-dark-dark-mode-only
+      rule: "#161c16 must only appear as dark-mode --background in index.css"
+
+    - id: brand-dark-light-mode
+      rule: "#232b22 replaces near-black for text and dark surfaces in light mode"
+
+    - id: overlays
+      rule: Modal/sheet overlays use bg-foreground/10 dark:bg-background/60, never bg-black/10
+
+    - id: no-inline-hex
+      rule: Avoid hardcoded hex in TSX except in index.css token definitions
+      allowed_files:
+        - "**/index.css"
+        - "**/*.css"
+
+  buttons:
+    - Primary CTA → Button variant default (brand)
+    - Secondary / cancel → variant outline or ghost
+    - Destructive confirm → variant destructive
+    - Links in prose → variant link
+    - Page actions → size default
+
+  charts:
+    - Neutral series → var(--chart-1) through var(--chart-5) green-gray scale
+    - Attention datapoint → var(--brand) only for the specific Cell/dot/bar needing highlight
+    - Never use brand for entire chart series unless all points need attention
+
+  progress:
+    - Indicator fill → bg-brand (via ProgressIndicator default)
+
+  typography:
+    - Page titles → font-heading
+    - Body → font-sans (default on html)
+
+  sidebar:
+    - Nav icon accent → text-brand on first SVG
+    - Logo → SidebarBrand with theme-aware assets
+
+# ---------------------------------------------------------------------------
+# Audit configuration — consumed by scripts/audit-ui.mjs
+# ---------------------------------------------------------------------------
+audit:
+  file_globs:
+    include:
+      - "**/*.{tsx,ts,css}"
+    exclude:
+      - "**/node_modules/**"
+      - "**/dist/**"
+      - "**/build/**"
+      - "**/.git/**"
+      - "**/talon-kit/**"
+
+  rules:
+    - id: forbidden-tailwind-colors
+      severity: error
+      description: Off-brand Tailwind color utilities
+      patterns:
+        - '\b(?:bg|text|border|ring|fill|stroke)-(?:black|amber|yellow|orange|lime|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-\d+)?(?:/\d+)?\b'
+
+    - id: forbidden-black
+      severity: error
+      description: Absolute black instead of brand dark tokens
+      patterns:
+        - '\b(?:bg|text|border)-black\b'
+        - '#000000'
+        - '#000\b'
+
+    - id: forbidden-black-overlay
+      severity: error
+      description: Black modal overlays — use foreground/background tokens
+      patterns:
+        - '\bbg-black/\d+\b'
+
+    - id: forbidden-hex-in-tsx
+      severity: warn
+      description: Hardcoded hex in component files — prefer CSS variables
+      patterns:
+        - '#[0-9a-fA-F]{3,8}\b'
+      allowed_paths:
+        - "**/index.css"
+        - "**/*.css"
+
+    - id: forbidden-darkest-in-light-context
+      severity: error
+      description: Darkest dark outside CSS token definitions
+      patterns:
+        - '#161[cC]16'
+      allowed_paths:
+        - "**/index.css"
+        - "**/talon-ui-kit.yaml"
+
+    - id: primary-cta-misuse
+      severity: warn
+      description: Primary buttons should use brand variant, not bg-primary
+      patterns:
+        - '<Button[^>]*className="[^"]*bg-primary'
+        - 'variant="default"[^>]*className="[^"]*bg-primary'
+
+    - id: progress-non-brand
+      severity: warn
+      description: Progress indicator should use bg-brand
+      patterns:
+        - 'ProgressIndicator[^>]*className="[^"]*bg-(?!brand)'
+        - '<ProgressIndicator\s+className="[^"]*bg-primary'
+
+    - id: chart-brand-series
+      severity: info
+      description: Full chart series using brand — verify only attention datapoints use brand
+      patterns:
+        - 'fill="var\(--brand\)"'
+        - 'stroke="var\(--brand\)"'
+        - 'fill:\s*var\(--brand\)'
+
+  recommended_imports:
+    button: "@/components/ui/button"
+    card: "@/components/ui/card"
+    master_layout: "@/components/patterns/master-layout"
+    data_table: "@/components/patterns/data-table"
+    page_top_bar: "@/components/patterns/page-shell"
+
+  structure_checks:
+    - id: has-theme-css
+      description: Project should define Talon tokens in index.css or equivalent
+      required_css_vars:
+        - "--brand"
+        - "--foreground"
+        - "--background"
+        - "--chart-1"

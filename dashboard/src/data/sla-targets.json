@@ -1,0 +1,12 @@
+[
+  { "tier": "Enterprise", "severity": "P1", "responseHours": 0.25, "resolutionHours": 4 },
+  { "tier": "Enterprise", "severity": "P2", "responseHours": 0.5, "resolutionHours": 8 },
+  { "tier": "Enterprise", "severity": "P3", "responseHours": 4, "resolutionHours": 16 },
+  { "tier": "Enterprise", "severity": "P4", "responseHours": 8, "resolutionHours": 720 },
+  { "tier": "Enterprise", "severity": "P5", "responseHours": 40, "resolutionHours": 80 },
+  { "tier": "SMB", "severity": "P1", "responseHours": 0.333, "resolutionHours": 4 },
+  { "tier": "SMB", "severity": "P2", "responseHours": 0.5, "resolutionHours": 8 },
+  { "tier": "SMB", "severity": "P3", "responseHours": 8, "resolutionHours": 16 },
+  { "tier": "SMB", "severity": "P4", "responseHours": 16, "resolutionHours": 720 },
+  { "tier": "SMB", "severity": "P5", "responseHours": 40, "resolutionHours": 80 }
+]
